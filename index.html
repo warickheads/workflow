@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tabulator Example</title>
+    <link
+      href="https://unpkg.com/tabulator-tables@6.2.0/dist/css/tabulator.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/tabulator-tables@6.2.0/dist/js/tabulator.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"
+    ></script>
+  </head>
+  <body>
+    <br />
+    <div id="TopContainer">
+      <h1 align="center">Findex Workflow Manager</h1>
+    </div>
+
+    <div>
+      <br />
+      <button id="file-load-trigger">Load all Data</button>
+      <button id="condata">Software Analysis</button>
+      <button id="Week 1">Week 1 Allocation</button>
+      <button id="Week 2">Week 2 Allocation</button>
+    </div>
+    <br />
+
+    <div id="example-table"></div>
+
+    <br />
+    <div id="fontSizeSelector">
+      Font Size:
+      <input
+        type="range"
+        id="fontSizeRange"
+        min="8"
+        max="14"
+        step="1"
+        value="10"
+      />
+      <span id="fontSizeValue">10</span>
+    </div>
+    <br />
+    <div class="Software">
+      <div id="outputDiv"></div>
+      <div id="exooutputDiv"></div>
+      <div id="imsoutputDiv"></div>
+      <div id="ipayoutputDiv"></div>
+      <div id="aceoutputDiv"></div>
+    </div>
+
+    <br />
+    <script>
+      //Build Tabulator
+      var table1 = new Tabulator("#example-table", {
+        height: "800px",
+        layout: "fitColumns",
+        autoColumns: true,
+
+        placeholder: "Awaiting Data, Please Load File",
+      });
+
+      //trigger AJAX load on "Load Data via AJAX" button click
+      document
+        .getElementById("file-load-trigger")
+        .addEventListener("click", function () {
+          table1.import("xlsx", [".xlsx", ".csv", ".ods"], "buffer");
+        });
+
+      document.getElementById("condata").addEventListener("click", function () {
+        var allData = table1.getHtml();
+        var rowCount = table1.getDataCount();
+        var sdataexo = table1.searchData("SOFTWARE", "like", "EXO");
+        var sdatadatapay = table1.searchData("SOFTWARE", "like", "DataPay");
+        var sdataims = table1.searchData("SOFTWARE", "like", "IMS");
+        var sdataipay = table1.searchData("SOFTWARE", "like", "i-Payroll");
+        var sdataace = table1.searchData("SOFTWARE", "like", "ACE");
+
+        console.log(allData);
+        console.log(rowCount);
+
+        function filterUniqueItems(array, fieldName) {
+          var uniqueItems = {};
+          return array.filter(function (item) {
+            if (!uniqueItems[item[fieldName]]) {
+              uniqueItems[item[fieldName]] = true;
+              return true;
+            }
+            return false;
+          });
+        }
+
+        function updateFontSize(event) {
+          var fontSize = event.target.value;
+          var listItems = document.querySelectorAll(".slist li");
+          listItems.forEach(function (li) {
+            li.style.fontSize = fontSize + "px";
+          });
+          document.getElementById("fontSizeValue").textContent = fontSize;
+        }
+
+        var fontSizeRange = document.getElementById("fontSizeRange");
+        fontSizeRange.addEventListener("input", updateFontSize);
+
+        var outputDiv = document.getElementById("outputDiv");
+        outputDiv.innerHTML = "";
+
+        var titleContainer = document.createElement("div");
+        titleContainer.id = "titleContainer";
+        titleContainer.classList.add("listTitle");
+        titleContainer.textContent = "DATAPAY";
+
+        var uniqueItems = filterUniqueItems(sdatadatapay, "CLIENT");
+
+        outputDiv.appendChild(titleContainer);
+
+        var ol = document.createElement("ol");
+        ol.classList.add("slist");
+        uniqueItems.forEach(function (item) {
+          var li = document.createElement("li");
+          li.textContent = item.CLIENT;
+          ol.appendChild(li);
+          outputDiv.appendChild(ol);
+        });
+
+        var exooutputDiv = document.getElementById("exooutputDiv");
+        exooutputDiv.innerHTML = "";
+
+        var exotitleContainer = document.createElement("div");
+        exotitleContainer.id = "exotitleContainer";
+        exotitleContainer.classList.add("listTitle");
+        exotitleContainer.textContent = "EXO";
+
+        var uniqueItems = filterUniqueItems(sdataexo, "CLIENT");
+
+        exooutputDiv.appendChild(exotitleContainer);
+
+        var ol = document.createElement("ol");
+        ol.classList.add("slist");
+        uniqueItems.forEach(function (item) {
+          var li = document.createElement("li");
+          li.textContent = item.CLIENT;
+          ol.appendChild(li);
+          exooutputDiv.appendChild(ol);
+        });
+
+        var aceoutputDiv = document.getElementById("aceoutputDiv");
+        aceoutputDiv.innerHTML = "";
+
+        var acetitleContainer = document.createElement("div");
+        acetitleContainer.id = "acetitleContainer";
+        acetitleContainer.classList.add("listTitle");
+        acetitleContainer.textContent = "ACE";
+
+        var uniqueItems = filterUniqueItems(sdataace, "CLIENT");
+
+        aceoutputDiv.appendChild(acetitleContainer);
+
+        var ol = document.createElement("ol");
+        ol.classList.add("slist");
+        uniqueItems.forEach(function (item) {
+          var li = document.createElement("li");
+          li.textContent = item.CLIENT;
+          ol.appendChild(li);
+          aceoutputDiv.appendChild(ol);
+        });
+
+        var ipayoutputDiv = document.getElementById("ipayoutputDiv");
+        ipayoutputDiv.innerHTML = "";
+
+        var ipaytitleContainer = document.createElement("div");
+        ipaytitleContainer.id = "ipaytitleContainer";
+        ipaytitleContainer.classList.add("listTitle");
+        ipaytitleContainer.textContent = "IPAYROLL";
+
+        var uniqueItems = filterUniqueItems(sdataipay, "CLIENT");
+
+        ipayoutputDiv.appendChild(ipaytitleContainer);
+
+        var ol = document.createElement("ol");
+        ol.classList.add("slist");
+        uniqueItems.forEach(function (item) {
+          var li = document.createElement("li");
+          li.textContent = item.CLIENT;
+          ol.appendChild(li);
+          ipayoutputDiv.appendChild(ol);
+        });
+
+        var imsoutputDiv = document.getElementById("imsoutputDiv");
+        imsoutputDiv.innerHTML = "";
+
+        var imstitleContainer = document.createElement("div");
+        imstitleContainer.id = "imstitleContainer";
+        imstitleContainer.classList.add("listTitle");
+        imstitleContainer.textContent = "IMS";
+
+        var uniqueItems = filterUniqueItems(sdataims, "CLIENT");
+
+        imsoutputDiv.appendChild(imstitleContainer);
+
+        var ol = document.createElement("ol");
+        ol.classList.add("slist");
+        uniqueItems.forEach(function (item) {
+          var li = document.createElement("li");
+          li.textContent = item.CLIENT;
+          ol.appendChild(li);
+          imsoutputDiv.appendChild(ol);
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,81 @@
+#TopContainer {
+  min-height: 8rem;
+  background-color: rgb(248, 100, 9);
+  color: rgb(0, 0, 0);
+  padding-top: 5px;
+}
+
+.Software {
+  display: flex;
+  justify-content: space-around;
+}
+
+#outputDiv {
+  padding: 5px;
+  border: 2px solid;
+  border-radius: 5px;
+
+  font-size: 11px;
+  background-color: aquamarine;
+}
+
+#exooutputDiv {
+  padding: 5px;
+  border: 2px solid;
+  border-radius: 5px;
+  box-shadow: 3px;
+
+  font-size: 11px;
+  background-color: rgb(62, 205, 107);
+}
+
+#imsoutputDiv {
+  padding: 5px;
+  border: 2px solid;
+  border-radius: 5px;
+
+  font-size: 11px;
+  background-color: rgb(49, 209, 231);
+}
+
+#ipayoutputDiv {
+  padding: 5px;
+  border: 2px solid;
+  border-radius: 5px;
+
+  font-size: 11px;
+  background-color: rgb(189, 237, 68);
+}
+
+#aceoutputDiv {
+  padding: 5px;
+  border: 2px solid;
+  border-radius: 5px;
+
+  font-size: 11px;
+  background-color: rgb(237, 186, 68);
+}
+
+.listTitle {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#myList {
+  list-style-type: none;
+  padding: 0;
+  text-align: left;
+}
+
+#myList li {
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+.tabulator {
+  font-size: 12px;
+}
+
+.tabulator .tabulator-header {
+  color: #1d4ad6;
+}
